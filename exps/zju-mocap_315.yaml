@@ -1,4 +1,4 @@
-exp_name: "zju-mocap_394"
+exp_name: "zju-mocap_315"
 
 random_bgcolor: true
 bgcolor: [0., 0., 0.]
@@ -6,39 +6,39 @@ img_size: [512, 512]
 
 dataset:
   train:
-    dataset_path: "data/zju-mocap/394"
+    dataset_path: "data/zju-mocap/315"
     batch_size: 1
     num_workers: 1
 
     maxframes: -2
 
   test_view:
-    dataset_path: "data/zju-mocap/394"
-    raw_dataset_path: "data/zju-mocap/CoreView_394"
+    dataset_path: "data/zju-mocap/315"
+    raw_dataset_path: "data/zju-mocap/CoreView_315"
     batch_size: 1
     num_workers: 1
     skip: 30
 
   test_pose:
-    dataset_path: "data/zju-mocap/394"
-    raw_dataset_path: "data/zju-mocap/CoreView_394"
+    dataset_path: "data/zju-mocap/315"
+    raw_dataset_path: "data/zju-mocap/CoreView_315"
     batch_size: 1
     num_workers: 1
     skip: 30
 
   test_pose_mdm:
-    dataset_path: "data/zju-mocap/394"
+    dataset_path: "data/zju-mocap/315"
     pose_path: ""
     batch_size: 1
     num_workers: 1
 
   test_on_train:
-    dataset_path: "data/zju-mocap/394"
+    dataset_path: "data/zju-mocap/315"
     batch_size: 1
     num_workers: 1
 
   test_freeview:
-    dataset_path: "data/zju-mocap/394"
+    dataset_path: "data/zju-mocap/315"
     batch_size: 1
     num_workers: 1
     src_type: 'zju_mocap'
@@ -122,9 +122,9 @@ train:
   lr_update_exp: true
   lr_decay_steps: 100000
 
-  log_freq: 300001
+  log_freq: 10000
   tb_freq: 10000
-  eval_freq: 10000
-  save_freq: 100000
+  eval_freq: 300001
+  save_freq: 10000
   total_iters: 300000
     

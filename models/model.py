@@ -299,6 +299,10 @@ class Model(nn.Module):
 			outputs['normal'] = normal
 			outputs['normal_mask'] = normal_mask[..., 0]
 			outputs['shadow'] = shadings
+		else:
+			outputs['mesh'] = mesh_observation
+			outputs['mesh_canonical'] = mesh_canonical
+			outputs['normal'] = normal
 
 		return rgbs, masks, outputs
 

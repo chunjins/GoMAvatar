@@ -21,7 +21,7 @@ from absl import flags
 FLAGS = flags.FLAGS
 
 flags.DEFINE_string('cfg',
-                    '387.yaml',
+                    '390.yaml',
                     'the path of config file')
 
 MODEL_DIR = '../../utils/smpl/models'

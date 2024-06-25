@@ -32,14 +32,14 @@ from pytorch3d.loss import (
 from eval import Evaluator
 
 EXCLUDE_KEYS_TO_GPU = ['frame_name', 'img_width', 'img_height']
-
+os.environ['TORCH_HOME'] = '/ubc/cs/home/c/chunjins/chunjin_shield/project/humannerf/torch'
 
 def parse_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
         "--cfg",
-        default=None,
+        default='exps/zju-mocap_315.yaml',
         type=str
     )
     parser.add_argument(
@@ -218,30 +218,30 @@ def main(args):
         num_workers=cfg.dataset.train.num_workers)
 
     # load test data
-    if cfg.dataset.test_view.name == 'zju-mocap':
-        from dataset.test import Dataset as NovelViewDataset
-        test_dataset = NovelViewDataset(
-            cfg.dataset.test_view.raw_dataset_path,
-            cfg.dataset.test_view.dataset_path,
-            test_type='view',
-            skip=cfg.dataset.test_view.skip,  # to match monohuman
-            exclude_view=cfg.dataset.test_view.exclude_view,
-            bgcolor=cfg.bgcolor,
-        )
-    else:
-        from dataset.train import Dataset as NovelViewDataset
-        test_dataset = NovelViewDataset(
-            cfg.dataset.test_view.dataset_path,
-            bgcolor=cfg.bgcolor,
-            skip=cfg.dataset.test_view.skip,
-            target_size=cfg.model.img_size,
-        )
-    test_dataloader = torch.utils.data.DataLoader(
-        batch_size=cfg.dataset.test_view.batch_size,
-        dataset=test_dataset,
-        shuffle=False,
-        drop_last=False,
-        num_workers=cfg.dataset.test_view.num_workers)
+    # if cfg.dataset.test_view.name == 'zju-mocap':
+    #     from dataset.test import Dataset as NovelViewDataset
+    #     test_dataset = NovelViewDataset(
+    #         cfg.dataset.test_view.raw_dataset_path,
+    #         cfg.dataset.test_view.dataset_path,
+    #         test_type='view',
+    #         skip=cfg.dataset.test_view.skip,  # to match monohuman
+    #         exclude_view=cfg.dataset.test_view.exclude_view,
+    #         bgcolor=cfg.bgcolor,
+    #     )
+    # else:
+    #     from dataset.train import Dataset as NovelViewDataset
+    #     test_dataset = NovelViewDataset(
+    #         cfg.dataset.test_view.dataset_path,
+    #         bgcolor=cfg.bgcolor,
+    #         skip=cfg.dataset.test_view.skip,
+    #         target_size=cfg.model.img_size,
+    #     )
+    # test_dataloader = torch.utils.data.DataLoader(
+    #     batch_size=cfg.dataset.test_view.batch_size,
+    #     dataset=test_dataset,
+    #     shuffle=False,
+    #     drop_last=False,
+    #     num_workers=cfg.dataset.test_view.num_workers)
 
     test_on_train_dataset = Dataset(
         cfg.dataset.train.dataset_path,
@@ -376,16 +376,16 @@ def main(args):
                 }, ckpt_path)
                 logging.info(f'saved to {ckpt_path}')
 
-            # evaluate
+            # # evaluate
             if n_iters % cfg.train.eval_freq == 0:
-                evaluate(test_dataloader, model, tb_logger, 'test', cfg.random_bgcolor, n_iters)
+            #     evaluate(test_dataloader, model, tb_logger, 'test', cfg.random_bgcolor, n_iters)
                 evaluate(test_on_train_dataloader, model, tb_logger, 'train', cfg.random_bgcolor, n_iters)
 
             n_iters += 1
             if n_iters > cfg.train.total_iters:
                 break
 
-    evaluate(test_dataloader, model, tb_logger, 'test', cfg.random_bgcolor, n_iters)
+    # evaluate(test_dataloader, model, tb_logger, 'test', cfg.random_bgcolor, n_iters)
 
 
 if __name__ == "__main__":

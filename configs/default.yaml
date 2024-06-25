@@ -12,10 +12,10 @@ dataset:
 
     skip: 1
     maxframes: -1
-    split_for_pose: false # if true, leave 1/5 frames for novel pose evaluation (monohuman's split)
+    split_for_pose: true # if true, leave 1/5 frames for novel pose evaluation (monohuman's split)
 
     crop_size: [-1, -1]
-    prefetch: false
+    prefetch: true
 
   test_view:
     name: "zju-mocap"

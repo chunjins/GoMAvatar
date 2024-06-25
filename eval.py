@@ -33,13 +33,13 @@ def parse_args():
 
 	parser.add_argument(
 		"--type",
-		default='view',
+		default='train',
 		choices=['view', 'pose', 'train', 'freeview', 'pose_mdm'],
 		type=str
 	)
 	parser.add_argument(
 		"--cfg",
-		default=None,
+		default='exps/zju-mocap_394.yaml',
 		type=str
 	)
 	parser.add_argument(
@@ -196,7 +196,11 @@ def main(args):
 		cfg.dataset.test_pose_mdm.pose_path = args.pose_path
 
 	save_dir = os.path.join(cfg.save_dir, 'eval', args.type)
+	save_dir_normal = os.path.join(cfg.save_dir, 'eval', args.type+'_normal')
+	save_dir_mesh = os.path.join(cfg.save_dir, 'eval', args.type+'_mesh')
 	os.makedirs(save_dir, exist_ok=True)
+	os.makedirs(save_dir_normal, exist_ok=True)
+	os.makedirs(save_dir_mesh, exist_ok=True)
 
 	# setup logger
 	logging_path = os.path.join(cfg.save_dir, 'eval', f'log_{args.type}.txt')
@@ -244,7 +248,7 @@ def main(args):
 			cfg.dataset.test_pose.dataset_path,
 			test_type='pose',
 			skip=cfg.dataset.test_pose.skip,  # to match monohuman
-			exclude_training_view=False,   # to match monohuman
+			exclude_training_view=True,   # to match monohuman
 			bgcolor=cfg.bgcolor,
 		)
 		test_dataloader = torch.utils.data.DataLoader(
@@ -273,8 +277,7 @@ def main(args):
 			cfg.dataset.train.dataset_path,
 			bgcolor=cfg.bgcolor,
 			skip=5,
-			target_size=cfg.model.img_size,
-			use_smplx=cfg.dataset.use_smplx)
+			target_size=cfg.model.img_size)
 		test_dataloader = torch.utils.data.DataLoader(
 			batch_size=cfg.dataset.test_on_train.batch_size,
 			dataset=test_dataset,
@@ -338,7 +341,7 @@ def main(args):
 			batch, exclude_keys=EXCLUDE_KEYS_TO_GPU)
 
 		with torch.no_grad():
-			pred, mask, _ = model(
+			pred, mask, outputs = model(
 				data['K'], data['E'],
 				data['cnl_gtfms'], data['dst_Rs'], data['dst_Ts'], data['dst_posevec'])
 
@@ -348,20 +351,29 @@ def main(args):
 
 		pred_imgs = pred.detach().cpu().numpy()
 		mask_imgs = mask.detach().cpu().numpy()
+		normal_img =  (1 - (outputs['normal'] + 1) * 0.5)
+		normal_imgs = normal_img.detach().cpu().numpy()
 		if args.type == 'view' or args.type == 'pose' or args.type == 'train':
 			truth_imgs = data['target_rgbs'].detach().cpu().numpy()
 
-		for i, (frame_name, pred_img, mask_img) in enumerate(zip(batch['frame_name'], pred_imgs, mask_imgs)):
+		for i, (frame_name, pred_img, mask_img, normal_img) in enumerate(zip(batch['frame_name'], pred_imgs, mask_imgs, normal_imgs)):
 			pred_img = to_8b_image(pred_img)
+			normal_img = to_8b_image(normal_img)
 			print(os.path.join(save_dir, frame_name + '.png'))
 
 			pred_imgs = []
+			normal_imgs = []
 			if args.type == 'view' or args.type == 'pose' or args.type == 'train':
 				truth_img = to_8b_image(truth_imgs[i])
 				evaluator.evaluate(pred_img / 255., truth_img / 255.)
 			pred_imgs.append(pred_img)
 			pred_imgs = np.concatenate(pred_imgs, axis=1)
 			Image.fromarray(pred_imgs).save(os.path.join(save_dir, frame_name + '.png'))
+
+			normal_imgs.append(normal_img)
+			normal_imgs = np.concatenate(normal_imgs, axis=1)
+			Image.fromarray(normal_imgs).save(os.path.join(save_dir_normal, frame_name + '.png'))
+
 	evaluator.summarize(os.path.join(cfg.save_dir, 'eval', f'metric_{args.type}.npy'))
 
 
