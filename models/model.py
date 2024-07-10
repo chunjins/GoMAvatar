@@ -303,6 +303,7 @@ class Model(nn.Module):
 			outputs['mesh'] = mesh_observation
 			outputs['mesh_canonical'] = mesh_canonical
 			outputs['normal'] = normal
+			outputs['normal_mask'] = normal_mask[..., 0]
 
 		return rgbs, masks, outputs
 

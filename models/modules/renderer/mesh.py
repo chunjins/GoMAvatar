@@ -122,7 +122,7 @@ class Renderer(nn.Module):
         normal_map = self.shader(fragments, mesh, feat)
 
         if not self.training:
-            return normal_map[..., :-1] * normal_map[..., -1:], None
+            return normal_map[..., :-1] * normal_map[..., -1:], normal_map[..., -1:]
 
         mask = self.renderer_silhouette(mesh)[..., -1:]
         return normal_map[..., :-1] * normal_map[..., -1:], mask

@@ -10,7 +10,7 @@ import math
 import torch
 import torch.utils.data
 import torch.optim as optim
-
+import torch.nn.functional as F
 from configs import make_cfg
 
 from models.model import Model
@@ -33,13 +33,13 @@ def parse_args():
 
 	parser.add_argument(
 		"--type",
-		default='train',
+		default='pose',
 		choices=['view', 'pose', 'train', 'freeview', 'pose_mdm'],
 		type=str
 	)
 	parser.add_argument(
 		"--cfg",
-		default='exps/zju-mocap_394.yaml',
+		default='exps/zju-mocap_315.yaml',
 		type=str
 	)
 	parser.add_argument(
@@ -351,14 +351,19 @@ def main(args):
 
 		pred_imgs = pred.detach().cpu().numpy()
 		mask_imgs = mask.detach().cpu().numpy()
-		normal_img =  (1 - (outputs['normal'] + 1) * 0.5)
-		normal_imgs = normal_img.detach().cpu().numpy()
+		normal_pred = F.normalize(outputs['normal'], dim=-1)
+		normal_mask = 1. - outputs['normal_mask']
+
+		normal_map = normal_pred.detach().cpu().numpy()
+		normal_mask = normal_mask[..., None].detach().cpu().numpy()
+		normal_imgs = 255. - (normal_map - normal_mask + 1) * 0.5 * 255.
+		normal_imgs = (normal_imgs).astype(np.uint8)
+
 		if args.type == 'view' or args.type == 'pose' or args.type == 'train':
 			truth_imgs = data['target_rgbs'].detach().cpu().numpy()
 
 		for i, (frame_name, pred_img, mask_img, normal_img) in enumerate(zip(batch['frame_name'], pred_imgs, mask_imgs, normal_imgs)):
 			pred_img = to_8b_image(pred_img)
-			normal_img = to_8b_image(normal_img)
 			print(os.path.join(save_dir, frame_name + '.png'))
 
 			pred_imgs = []

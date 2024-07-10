@@ -1,5 +1,5 @@
 dataset:
-  zju_mocap_path: ../../data/zju-mocap/
+  zju_mocap_path: /media/chunjins/My Passport/project/HumanNeRF/0_dataset/zju_mocap
   subject: '393'
   sex: 'neutral'
 
@@ -7,5 +7,5 @@ training_view: 0
 max_frames: -1
 
 output:
-  dir: ../../data/zju-mocap/
+  dir: /ubc/cs/home/c/chunjins/chunjin_scratch/project/humannerf/dataset/zju_processed/data_for_GoMAvatar
   name: '393'

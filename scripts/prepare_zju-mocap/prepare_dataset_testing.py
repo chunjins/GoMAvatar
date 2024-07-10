@@ -11,7 +11,7 @@ from absl import flags
 FLAGS = flags.FLAGS
 
 flags.DEFINE_string('cfg',
-                    '394.yaml',
+                    '315.yaml',
                     'the path of config file')
 
 MODEL_DIR = '../../utils/smpl/models'
@@ -70,6 +70,13 @@ def main(argv):
     ipaths = img_paths[0]
     for ipath in ipaths:
         cam_dir = ipath.split('/')[0]
+        if subject == '313' or subject == '315':
+            cam_dir = cam_dir.replace(' (', '_')
+            cam_dir = cam_dir.replace(')', '')
+            cam_idx = int(cam_dir.split('_')[1])
+            if cam_idx > 19:
+                cam_idx -= 2
+            cam_dir = f'Camera_B{cam_idx}'
         prepare_dir(out_img_dir, cam_dir)
         prepare_dir(out_msk1_dir, cam_dir)
         prepare_dir(out_msk2_dir, cam_dir)
@@ -79,18 +86,40 @@ def main(argv):
 
     for idx, ipaths in enumerate(tqdm(img_paths)):
         for ipath in ipaths:
+            if subject == '313' or subject == '315':
+                idx_img = int(ipath.split('_')[4])
+                out_name = '{:06d}.jpg'.format(idx_img-1)
+
+                cam_dir = ipath.split('/')[0]
+                cam_dir = cam_dir.replace(' (', '_')
+                cam_dir = cam_dir.replace(')', '')
+                cam_idx = int(cam_dir.split('_')[1])
+                if cam_idx > 19:
+                    cam_idx -= 2
+                cam_dir = f'Camera_B{cam_idx}'
+                out_name = f'{cam_dir}/{out_name}'
+
+            else:
+                out_name = ipath
+
             img_path = os.path.join(subject_dir, ipath)
-            out_img_path = os.path.join(out_img_dir, ipath)
+            out_img_path = os.path.join(out_img_dir, out_name)
 
             ipath = ipath.replace('jpg', 'png')
+            out_name = out_name.replace('jpg', 'png')
             msk1_path = os.path.join(subject_dir, 'mask', ipath)
             msk2_path = os.path.join(subject_dir, 'mask_cihp', ipath)
-            out_msk1_path = os.path.join(out_msk1_dir, ipath)
-            out_msk2_path = os.path.join(out_msk2_dir, ipath)
+            out_msk1_path = os.path.join(out_msk1_dir, out_name)
+            out_msk2_path = os.path.join(out_msk2_dir, out_name)
 
             copyfile(img_path, out_img_path)
             copyfile(msk1_path, out_msk1_path)
-            copyfile(msk2_path, out_msk2_path)
+
+            try:
+                copyfile(msk2_path, out_msk2_path)
+            except Exception as e:
+                copyfile(msk1_path, out_msk2_path)
+
 
 
 if __name__ == '__main__':
