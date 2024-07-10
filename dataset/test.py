@@ -34,13 +34,14 @@ class Dataset(torch.utils.data.Dataset):
             exclude_training_view=True,
             exclude_view=0,
             skip=30,
+            idxs=None,
             **_):
 
         logging.info(f'[Raw dataset path]: {raw_dataset_path}')
         logging.info(f'[Dataset Path]: {dataset_path}')
         if exclude_training_view:
             logging.info(f'[Exclude view]: {exclude_view}')
-
+        self.test_type = test_type
         self.raw_dataset_path = raw_dataset_path
         self.dataset_path = dataset_path
 
@@ -57,6 +58,11 @@ class Dataset(torch.utils.data.Dataset):
         if test_type == 'view':
             logging.info('use monohuman split - testing novel view')
             self.framelist = self.framelist[:-(len(self.framelist) // 5)]
+        elif test_type == 'mesh':
+            logging.info('use monohuman split - testing novel view')
+            self.framelist = [self.framelist[i] for i in idxs]
+            self.cameras = self.cameras[1]
+            self.cameras = {1: self.cameras}
         elif test_type == 'pose':
             logging.info('use monohuman split - testing novel pose')
             self.framelist = self.framelist[-(len(self.framelist) // 5):]
@@ -212,6 +218,11 @@ class Dataset(torch.utils.data.Dataset):
         results = {
             'frame_name': 'Camera_B{}_{}'.format(view_id + 1, frame_name)
         }
+
+        if self.test_type == 'mesh':
+            results = {
+                'frame_name': '{}'.format(idx)
+            }
 
         if self.bgcolor is None:
             bgcolor = (np.random.rand(3) * 255.).astype('float32')

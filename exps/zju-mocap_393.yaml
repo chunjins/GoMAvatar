@@ -19,6 +19,14 @@ dataset:
     num_workers: 1
     skip: 30
 
+  test_mesh:
+    dataset_path: "data/zju-mocap/393"
+    raw_dataset_path: "data/zju-mocap/CoreView_393"
+    batch_size: 1
+    num_workers: 1
+    skip: 1
+    idxs: [0, 60, 120, 150, 180, 210, 240]
+
   test_pose:
     dataset_path: "data/zju-mocap/393"
     raw_dataset_path: "data/zju-mocap/CoreView_393"

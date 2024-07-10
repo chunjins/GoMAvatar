@@ -11,6 +11,7 @@ import torch
 import torch.utils.data
 import torch.optim as optim
 import torch.nn.functional as F
+from pytorch3d.io import IO as io3d
 from configs import make_cfg
 
 from models.model import Model
@@ -33,13 +34,13 @@ def parse_args():
 
 	parser.add_argument(
 		"--type",
-		default='pose',
+		default='mesh',
 		choices=['view', 'pose', 'train', 'freeview', 'pose_mdm'],
 		type=str
 	)
 	parser.add_argument(
 		"--cfg",
-		default='exps/zju-mocap_315.yaml',
+		default='exps/zju-mocap_313.yaml',
 		type=str
 	)
 	parser.add_argument(
@@ -195,12 +196,14 @@ def main(args):
 	if args.pose_path is not None:
 		cfg.dataset.test_pose_mdm.pose_path = args.pose_path
 
-	save_dir = os.path.join(cfg.save_dir, 'eval', args.type)
-	save_dir_normal = os.path.join(cfg.save_dir, 'eval', args.type+'_normal')
-	save_dir_mesh = os.path.join(cfg.save_dir, 'eval', args.type+'_mesh')
-	os.makedirs(save_dir, exist_ok=True)
-	os.makedirs(save_dir_normal, exist_ok=True)
-	os.makedirs(save_dir_mesh, exist_ok=True)
+	if args.type == 'mesh':
+		save_dir = os.path.join(cfg.save_dir, 'eval', args.type)
+		os.makedirs(save_dir, exist_ok=True)
+	else:
+		save_dir = os.path.join(cfg.save_dir, 'eval', args.type)
+		save_dir_normal = os.path.join(cfg.save_dir, 'eval', args.type + '_normal')
+		os.makedirs(save_dir, exist_ok=True)
+		os.makedirs(save_dir_normal, exist_ok=True)
 
 	# setup logger
 	logging_path = os.path.join(cfg.save_dir, 'eval', f'log_{args.type}.txt')
@@ -224,6 +227,33 @@ def main(args):
 				test_type='view',
 				skip=cfg.dataset.test_view.skip,  # to match monohuman
 				exclude_view=cfg.dataset.test_view.exclude_view,
+				bgcolor=cfg.bgcolor,
+			)
+		else:
+			from dataset.train import Dataset as NovelViewDataset
+			test_dataset = NovelViewDataset(
+				cfg.dataset.test_view.dataset_path,
+				bgcolor=cfg.bgcolor,
+				skip=cfg.dataset.test_view.skip,
+				target_size=cfg.model.img_size,
+			)
+		test_dataloader = torch.utils.data.DataLoader(
+			batch_size=cfg.dataset.test_view.batch_size,
+			dataset=test_dataset,
+			shuffle=False,
+			drop_last=False,
+			num_workers=cfg.dataset.test_view.num_workers)
+	elif args.type == 'mesh':
+		# evaluate novel view synthesis following monohuman's split
+		if cfg.dataset.test_mesh.name == 'zju-mocap':
+			from dataset.test import Dataset as MeshDataset
+			test_dataset = MeshDataset(
+				cfg.dataset.test_mesh.raw_dataset_path,
+				cfg.dataset.test_mesh.dataset_path,
+				test_type='mesh',
+				idxs=cfg.dataset.test_mesh.idxs,
+				skip=cfg.dataset.test_mesh.skip,  # to match monohuman
+				exclude_view=cfg.dataset.test_mesh.exclude_view,
 				bgcolor=cfg.bgcolor,
 			)
 		else:
@@ -349,35 +379,42 @@ def main(args):
 			bgcolor_tensor = torch.tensor(cfg.bgcolor).float()[None].to(pred.device) / 255.
 			pred = unpack(pred, mask, bgcolor_tensor)
 
-		pred_imgs = pred.detach().cpu().numpy()
-		mask_imgs = mask.detach().cpu().numpy()
-		normal_pred = F.normalize(outputs['normal'], dim=-1)
-		normal_mask = 1. - outputs['normal_mask']
+		if args.type == 'mesh':
+			mesh = outputs['mesh']
+			frame_name = batch['frame_name'][0]
+			io3d().save_mesh(mesh, f'{save_dir}/{frame_name}.ply')
+		else:
+			pred_imgs = pred.detach().cpu().numpy()
+			mask_imgs = mask.detach().cpu().numpy()
+			normal_pred = F.normalize(outputs['normal'], dim=-1)
+			normal_mask = 1. - outputs['normal_mask']
 
-		normal_map = normal_pred.detach().cpu().numpy()
-		normal_mask = normal_mask[..., None].detach().cpu().numpy()
-		normal_imgs = 255. - (normal_map - normal_mask + 1) * 0.5 * 255.
-		normal_imgs = (normal_imgs).astype(np.uint8)
+			normal_map = normal_pred.detach().cpu().numpy()
+			normal_mask = normal_mask[..., None].detach().cpu().numpy()
+			normal_imgs = 255. - (normal_map - normal_mask + 1) * 0.5 * 255.
+			normal_imgs = (normal_imgs).astype(np.uint8)
 
-		if args.type == 'view' or args.type == 'pose' or args.type == 'train':
-			truth_imgs = data['target_rgbs'].detach().cpu().numpy()
-
-		for i, (frame_name, pred_img, mask_img, normal_img) in enumerate(zip(batch['frame_name'], pred_imgs, mask_imgs, normal_imgs)):
-			pred_img = to_8b_image(pred_img)
-			print(os.path.join(save_dir, frame_name + '.png'))
-
-			pred_imgs = []
-			normal_imgs = []
 			if args.type == 'view' or args.type == 'pose' or args.type == 'train':
-				truth_img = to_8b_image(truth_imgs[i])
-				evaluator.evaluate(pred_img / 255., truth_img / 255.)
-			pred_imgs.append(pred_img)
-			pred_imgs = np.concatenate(pred_imgs, axis=1)
-			Image.fromarray(pred_imgs).save(os.path.join(save_dir, frame_name + '.png'))
+				truth_imgs = data['target_rgbs'].detach().cpu().numpy()
 
-			normal_imgs.append(normal_img)
-			normal_imgs = np.concatenate(normal_imgs, axis=1)
-			Image.fromarray(normal_imgs).save(os.path.join(save_dir_normal, frame_name + '.png'))
+			for i, (frame_name, pred_img, mask_img, normal_img) in enumerate(zip(batch['frame_name'], pred_imgs, mask_imgs, normal_imgs)):
+				pred_img = to_8b_image(pred_img)
+				print(os.path.join(save_dir, frame_name + '.png'))
+
+				pred_imgs = []
+				normal_imgs = []
+				if args.type == 'view' or args.type == 'pose' or args.type == 'train':
+					truth_img = to_8b_image(truth_imgs[i])
+					evaluator.evaluate(pred_img / 255., truth_img / 255.)
+				pred_imgs.append(pred_img)
+				pred_imgs = np.concatenate(pred_imgs, axis=1)
+				Image.fromarray(pred_imgs).save(os.path.join(save_dir, frame_name + '.png'))
+
+				normal_imgs.append(normal_img)
+				normal_imgs = np.concatenate(normal_imgs, axis=1)
+				Image.fromarray(normal_imgs).save(os.path.join(save_dir_normal, frame_name + '.png'))
+
+
 
 	evaluator.summarize(os.path.join(cfg.save_dir, 'eval', f'metric_{args.type}.npy'))
 

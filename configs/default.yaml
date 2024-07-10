@@ -29,6 +29,18 @@ dataset:
 
     exclude_view: 0
 
+  test_mesh:
+    name: "zju-mocap"
+    dataset_path: "dataset/zju_mocap/387"
+    raw_dataset_path: "dataset/zju_mocap/CoreView_387"
+    batch_size: 1
+    num_workers: 1
+
+    skip: 1
+    maxframes: -1
+
+    exclude_view: 0
+
   test_pose:
     dataset_path: "dataset/zju_mocap/387"
     raw_dataset_path: "dataset/zju_mocap/CoreView_387"
