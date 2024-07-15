@@ -41,7 +41,7 @@ dataset:
     num_workers: 1
 
   test_on_train:
-    dataset_path: "data/zju-mocap/394"
+    dataset_path: "data/zju-mocap/for_video/394"
     batch_size: 1
     num_workers: 1
 
@@ -50,6 +50,8 @@ dataset:
     batch_size: 1
     num_workers: 1
     src_type: 'zju_mocap'
+
+save_dir: 'log/zju-mocap'
 
 model:
   img_size: [512, 512]

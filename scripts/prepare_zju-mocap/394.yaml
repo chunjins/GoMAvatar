@@ -4,8 +4,11 @@ dataset:
   sex: 'neutral'
 
 training_view: 0
-max_frames: 475
+#max_frames: 475
+
+max_frames: 730 # for video
+min_frames: 380
 
 output:
-  dir: /ubc/cs/home/c/chunjins/chunjin_scratch/project/humannerf/dataset/zju_processed/data_for_GoMAvatar
+  dir: /ubc/cs/home/c/chunjins/chunjin_scratch/project/humannerf/dataset/zju_processed/data_for_GoMAvatar/for_video
   name: '394'

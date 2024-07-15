@@ -21,7 +21,7 @@ from absl import flags
 FLAGS = flags.FLAGS
 
 flags.DEFINE_string('cfg',
-                    '377.yaml',
+                    '394.yaml',
                     'the path of config file')
 
 MODEL_DIR = '../../utils/smpl/models'
@@ -66,6 +66,7 @@ def main(argv):
     subject = cfg['dataset']['subject']
     sex = cfg['dataset']['sex']
     max_frames = cfg['max_frames']
+    min_frames = cfg['min_frames']
 
     dataset_dir = cfg['dataset']['zju_mocap_path']
     subject_dir = os.path.join(dataset_dir, f"CoreView_{subject}")
@@ -97,7 +98,8 @@ def main(argv):
         for multi_view_paths in img_path_frames_views
     ])
     if max_frames > 0:
-        img_paths = img_paths[:max_frames]
+        # img_paths = img_paths[:max_frames]
+        img_paths = img_paths[min_frames:max_frames]
 
     output_path = os.path.join(cfg['output']['dir'],
                                subject if 'name' not in cfg['output'].keys() else cfg['output']['name'])
