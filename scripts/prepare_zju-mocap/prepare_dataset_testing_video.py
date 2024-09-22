@@ -38,7 +38,9 @@ def main(argv):
 
     cfg = parse_config()
     subject = cfg['dataset']['subject']
-    max_frames = cfg['max_frames']
+    max_frames = cfg['video']['max_frames']
+    min_frames = cfg['video']['min_frames']
+    view = cfg['video']['view']
 
     dataset_dir = cfg['dataset']['zju_mocap_path']
     subject_dir = os.path.join(dataset_dir, f"CoreView_{subject}")
@@ -53,12 +55,12 @@ def main(argv):
         for multi_view_paths in img_path_frames_views
     ])
     if max_frames > 0:
-        img_paths = img_paths[:max_frames]
+        img_paths = img_paths[min_frames:max_frames]
 
-    skip = 30
-    img_paths_nv = img_paths[:-(len(img_paths) // 5)][::skip]
-    img_paths_np = img_paths[-(len(img_paths) // 5):][::skip]
-    img_paths = np.concatenate([img_paths_nv, img_paths_np], axis=0)
+    # skip = 1
+    # img_paths_nv = img_paths[:-(len(img_paths) // 5)][::skip]
+    # img_paths_np = img_paths[-(len(img_paths) // 5):][::skip]
+    # img_paths = np.concatenate([img_paths_nv, img_paths_np], axis=0)
 
     output_path = os.path.join(cfg['output']['dir'], f"CoreView_{subject}")
 
@@ -86,6 +88,7 @@ def main(argv):
 
     for idx, ipaths in enumerate(tqdm(img_paths)):
         for ipath in ipaths:
+
             if subject == '313' or subject == '315':
                 idx_img = int(ipath.split('_')[4])
                 out_name = '{:06d}.jpg'.format(idx_img-1)
@@ -100,25 +103,28 @@ def main(argv):
                 out_name = f'{cam_dir}/{out_name}'
 
             else:
+                cam_idx = ipath.split('/')[0]
+                cam_idx = cam_idx.split('_')[1]
+                cam_idx = int(cam_idx.replace('B',''))
                 out_name = ipath
+            if cam_idx == view + 1:
+                img_path = os.path.join(subject_dir, ipath)
+                out_img_path = os.path.join(out_img_dir, out_name)
 
-            img_path = os.path.join(subject_dir, ipath)
-            out_img_path = os.path.join(out_img_dir, out_name)
+                ipath = ipath.replace('jpg', 'png')
+                out_name = out_name.replace('jpg', 'png')
+                msk1_path = os.path.join(subject_dir, 'mask', ipath)
+                msk2_path = os.path.join(subject_dir, 'mask_cihp', ipath)
+                out_msk1_path = os.path.join(out_msk1_dir, out_name)
+                out_msk2_path = os.path.join(out_msk2_dir, out_name)
 
-            ipath = ipath.replace('jpg', 'png')
-            out_name = out_name.replace('jpg', 'png')
-            msk1_path = os.path.join(subject_dir, 'mask', ipath)
-            msk2_path = os.path.join(subject_dir, 'mask_cihp', ipath)
-            out_msk1_path = os.path.join(out_msk1_dir, out_name)
-            out_msk2_path = os.path.join(out_msk2_dir, out_name)
+                copyfile(img_path, out_img_path)
+                copyfile(msk1_path, out_msk1_path)
 
-            copyfile(img_path, out_img_path)
-            copyfile(msk1_path, out_msk1_path)
-
-            try:
-                copyfile(msk2_path, out_msk2_path)
-            except Exception as e:
-                copyfile(msk1_path, out_msk2_path)
+                try:
+                    copyfile(msk2_path, out_msk2_path)
+                except Exception as e:
+                    copyfile(msk1_path, out_msk2_path)
 
 
 

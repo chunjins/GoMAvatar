@@ -34,6 +34,13 @@ dataset:
     num_workers: 1
     skip: 30
 
+  test_video:
+    dataset_path: "data/zju-mocap/for_video/394"
+    raw_dataset_path: "data/zju-mocap/for_video/CoreView_394"
+    batch_size: 1
+    num_workers: 1
+    skip: 1
+
   test_pose_mdm:
     dataset_path: "data/zju-mocap/394"
     pose_path: ""
@@ -41,7 +48,7 @@ dataset:
     num_workers: 1
 
   test_on_train:
-    dataset_path: "data/zju-mocap/for_video/394"
+    dataset_path: "data/zju-mocap/394"
     batch_size: 1
     num_workers: 1
 

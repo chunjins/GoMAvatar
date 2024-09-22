@@ -34,8 +34,8 @@ def parse_args():
 
 	parser.add_argument(
 		"--type",
-		default='train',
-		choices=['view', 'pose', 'train', 'freeview', 'pose_mdm'],
+		default='video',
+		choices=['view', 'pose', 'train', 'freeview', 'pose_mdm', 'video'],
 		type=str
 	)
 	parser.add_argument(
@@ -300,13 +300,30 @@ def main(args):
 			shuffle=False,
 			drop_last=False,
 			num_workers=cfg.dataset.test_pose_mdm.num_workers)
+	elif args.type == 'video':
+		# render training views for debugging
+		from dataset.test import Dataset as VideoDataset
+		test_dataset = VideoDataset(
+			cfg.dataset.test_video.raw_dataset_path,
+			cfg.dataset.test_video.dataset_path,
+			test_type='video',
+			skip=cfg.dataset.test_video.skip,  # to match monohuman
+			exclude_training_view=False,
+			bgcolor=cfg.bgcolor,
+		)
+		test_dataloader = torch.utils.data.DataLoader(
+			batch_size=cfg.dataset.test_view.batch_size,
+			dataset=test_dataset,
+			shuffle=False,
+			drop_last=False,
+			num_workers=cfg.dataset.test_view.num_workers)
 	elif args.type == 'train':
 		# render training views for debugging
 		from dataset.train import Dataset as TrainDataset
 		test_dataset = TrainDataset(
-			cfg.dataset.train.dataset_path,
+			cfg.dataset.test_on_train.dataset_path,
 			bgcolor=cfg.bgcolor,
-			skip=5,
+			skip=1,
 			target_size=cfg.model.img_size)
 		test_dataloader = torch.utils.data.DataLoader(
 			batch_size=cfg.dataset.test_on_train.batch_size,
@@ -357,7 +374,7 @@ def main(args):
 	size_all_mb = param_size / 1024 ** 2
 	logging.info('model size: {:.3f}MB'.format(size_all_mb))
 
-	if args.type == 'pose' or args.type == 'tpose' or args.type == 'pose_mdm':
+	if args.type == 'pose' or args.type == 'video' or args.type == 'tpose' or args.type == 'pose_mdm':
 		# disable pose refinement when poses are not in training
 		model.pose_refinement_module = None
 

@@ -35,6 +35,7 @@ class Dataset(torch.utils.data.Dataset):
             exclude_view=0,
             skip=30,
             idxs=None,
+            start=0,
             **_):
 
         logging.info(f'[Raw dataset path]: {raw_dataset_path}')
@@ -59,10 +60,15 @@ class Dataset(torch.utils.data.Dataset):
             logging.info('use monohuman split - testing novel view')
             self.framelist = self.framelist[:-(len(self.framelist) // 5)]
         elif test_type == 'mesh':
-            logging.info('use monohuman split - testing novel view')
+            logging.info('use view 1 to generete mesh')
             self.framelist = [self.framelist[i] for i in idxs]
             self.cameras = self.cameras[1]
             self.cameras = {1: self.cameras}
+        elif test_type == 'video':
+            logging.info('use view 0 to generate continue sequence for video')
+            self.cameras = self.cameras[0]
+            self.cameras = {0: self.cameras}
+            self.framelist = self.framelist[start:]
         elif test_type == 'pose':
             logging.info('use monohuman split - testing novel pose')
             self.framelist = self.framelist[-(len(self.framelist) // 5):]
