@@ -39,7 +39,7 @@ def parse_args():
 
     parser.add_argument(
         "--cfg",
-        default='exps/zju-mocap_315.yaml',
+        default='exps/synwild/00069_Dance.yaml',
         type=str
     )
     parser.add_argument(

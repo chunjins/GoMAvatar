@@ -34,13 +34,13 @@ def parse_args():
 
 	parser.add_argument(
 		"--type",
-		default='video',
+		default='train',
 		choices=['view', 'pose', 'train', 'freeview', 'pose_mdm', 'video'],
 		type=str
 	)
 	parser.add_argument(
 		"--cfg",
-		default='exps/zju-mocap_394.yaml',
+		default='exps/synwild/00070_Dance.yaml',
 		type=str
 	)
 	parser.add_argument(
