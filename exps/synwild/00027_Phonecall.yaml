@@ -14,22 +14,23 @@ dataset:
 
   test_view:
     dataset_path: "data/synwild/00027_Phonecall_training"
-    raw_dataset_path: "data/zju-mocap/CoreView_313"
+    raw_dataset_path: "data/synwild/00000_random_training"
     batch_size: 1
     num_workers: 1
     skip: 30
 
   test_mesh:
+    name: 'synwild'
     dataset_path: "data/synwild/00027_Phonecall_training"
-    raw_dataset_path: "data/zju-mocap/CoreView_313"
+    raw_dataset_path: "data/synwild/00000_random_training"
     batch_size: 1
     num_workers: 1
     skip: 1
-    idxs: [ 0, 30 ]
+    idxs: []
 
   test_pose:
     dataset_path: "data/synwild/00027_Phonecall_training"
-    raw_dataset_path: "data/zju-mocap/CoreView_313"
+    raw_dataset_path: "data/synwild/00000_random_training"
     batch_size: 1
     num_workers: 1
     skip: 30

@@ -34,13 +34,13 @@ def parse_args():
 
 	parser.add_argument(
 		"--type",
-		default='train',
-		choices=['view', 'pose', 'train', 'freeview', 'pose_mdm', 'video'],
+		default='mesh',
+		choices=['view', 'pose', 'train', 'freeview', 'pose_mdm', 'video', 'mesh'],
 		type=str
 	)
 	parser.add_argument(
 		"--cfg",
-		default='exps/synwild/00070_Dance.yaml',
+		default='exps/synwild/00020_Dance.yaml',
 		type=str
 	)
 	parser.add_argument(
@@ -261,7 +261,7 @@ def main(args):
 			test_dataset = NovelViewDataset(
 				cfg.dataset.test_view.dataset_path,
 				bgcolor=cfg.bgcolor,
-				skip=cfg.dataset.test_view.skip,
+				skip=cfg.dataset.test_mesh.skip,
 				target_size=cfg.model.img_size,
 			)
 		test_dataloader = torch.utils.data.DataLoader(
@@ -402,32 +402,32 @@ def main(args):
 			io3d().save_mesh(mesh, f'{save_dir}/{frame_name}.ply')
 
 
-			pred_imgs = pred.detach().cpu().numpy()
-			mask_imgs = mask.detach().cpu().numpy()
-			normal_pred = F.normalize(outputs['normal'], dim=-1)
-			normal_mask = 1. - outputs['normal_mask']
-
-			normal_map = normal_pred.detach().cpu().numpy()
-			normal_mask = normal_mask[..., None].detach().cpu().numpy()
-			normal_imgs = 255. - (normal_map - normal_mask + 1) * 0.5 * 255.
-			normal_imgs = (normal_imgs).astype(np.uint8)
-
-			if args.type == 'view' or args.type == 'pose' or args.type == 'train':
-				truth_imgs = data['target_rgbs'].detach().cpu().numpy()
-
-			for i, (frame_name, pred_img, mask_img, normal_img) in enumerate(
-					zip(batch['frame_name'], pred_imgs, mask_imgs, normal_imgs)):
-				pred_img = to_8b_image(pred_img)
-				print(os.path.join(save_dir, frame_name + '.png'))
-
-				pred_imgs = []
-				normal_imgs = []
-				if args.type == 'view' or args.type == 'pose' or args.type == 'train':
-					truth_img = to_8b_image(truth_imgs[i])
-					evaluator.evaluate(pred_img / 255., truth_img / 255.)
-				pred_imgs.append(pred_img)
-				pred_imgs = np.concatenate(pred_imgs, axis=1)
-				Image.fromarray(pred_imgs).save(os.path.join(save_dir, frame_name + '.png'))
+			# pred_imgs = pred.detach().cpu().numpy()
+			# mask_imgs = mask.detach().cpu().numpy()
+			# normal_pred = F.normalize(outputs['normal'], dim=-1)
+			# normal_mask = 1. - outputs['normal_mask']
+			#
+			# normal_map = normal_pred.detach().cpu().numpy()
+			# normal_mask = normal_mask[..., None].detach().cpu().numpy()
+			# normal_imgs = 255. - (normal_map - normal_mask + 1) * 0.5 * 255.
+			# normal_imgs = (normal_imgs).astype(np.uint8)
+			#
+			# if args.type == 'view' or args.type == 'pose' or args.type == 'train':
+			# 	truth_imgs = data['target_rgbs'].detach().cpu().numpy()
+			#
+			# for i, (frame_name, pred_img, mask_img, normal_img) in enumerate(
+			# 		zip(batch['frame_name'], pred_imgs, mask_imgs, normal_imgs)):
+			# 	pred_img = to_8b_image(pred_img)
+			# 	print(os.path.join(save_dir, frame_name + '.png'))
+			#
+			# 	pred_imgs = []
+			# 	normal_imgs = []
+			# 	if args.type == 'view' or args.type == 'pose' or args.type == 'train':
+			# 		truth_img = to_8b_image(truth_imgs[i])
+			# 		evaluator.evaluate(pred_img / 255., truth_img / 255.)
+			# 	pred_imgs.append(pred_img)
+			# 	pred_imgs = np.concatenate(pred_imgs, axis=1)
+			# 	Image.fromarray(pred_imgs).save(os.path.join(save_dir, frame_name + '.png'))
 
 		else:
 			pred_imgs = pred.detach().cpu().numpy()
