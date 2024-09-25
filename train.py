@@ -39,7 +39,7 @@ def parse_args():
 
     parser.add_argument(
         "--cfg",
-        default='exps/synwild/00069_Dance.yaml',
+        default='exps/monoperfcap/nadia.yaml',
         type=str
     )
     parser.add_argument(
