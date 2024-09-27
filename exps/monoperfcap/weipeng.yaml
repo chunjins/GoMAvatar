@@ -29,11 +29,11 @@ dataset:
     idxs: []
 
   test_pose:
-    dataset_path: "data/monoperfcap/weipeng_training"
-    raw_dataset_path: "data/monoperfcap/weipeng_training"
+    dataset_path: "data/monoperfcap/weipeng_novel_pose"
+    raw_dataset_path: "data/monoperfcap/weipeng_novel_pose"
     batch_size: 1
     num_workers: 1
-    skip: 30
+    skip: 1
 
   test_pose_mdm:
     dataset_path: "data/monoperfcap/weipeng_training"

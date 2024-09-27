@@ -34,13 +34,13 @@ def parse_args():
 
 	parser.add_argument(
 		"--type",
-		default='mesh',
+		default='pose',
 		choices=['view', 'pose', 'train', 'freeview', 'pose_mdm', 'video', 'mesh'],
 		type=str
 	)
 	parser.add_argument(
 		"--cfg",
-		default='exps/synwild/00020_Dance.yaml',
+		default='exps/monoperfcap/oleks.yaml',
 		type=str
 	)
 	parser.add_argument(
@@ -272,15 +272,24 @@ def main(args):
 			num_workers=cfg.dataset.test_view.num_workers)
 	elif args.type == 'pose':
 		# evaluate novel pose synthesis following monohuman's split
-		from dataset.test import Dataset as NovelPoseDataset
-		test_dataset = NovelPoseDataset(
-			cfg.dataset.test_pose.raw_dataset_path,
-			cfg.dataset.test_pose.dataset_path,
-			test_type='pose',
-			skip=cfg.dataset.test_pose.skip,  # to match monohuman
-			exclude_training_view=True,   # to match monohuman
-			bgcolor=cfg.bgcolor,
-		)
+		if cfg.dataset.test_mesh.name == 'zju-mocap':
+			from dataset.test import Dataset as NovelPoseDataset
+			test_dataset = NovelPoseDataset(
+				cfg.dataset.test_pose.raw_dataset_path,
+				cfg.dataset.test_pose.dataset_path,
+				test_type='pose',
+				skip=cfg.dataset.test_pose.skip,  # to match monohuman
+				exclude_training_view=True,   # to match monohuman
+				bgcolor=cfg.bgcolor,
+			)
+		else:
+			from dataset.train import Dataset as NovelPoseDataset
+			test_dataset = NovelPoseDataset(
+				cfg.dataset.test_pose.dataset_path,
+				bgcolor=cfg.bgcolor,
+				skip=cfg.dataset.test_pose.skip,
+				target_size=cfg.model.img_size,
+			)
 		test_dataloader = torch.utils.data.DataLoader(
 			batch_size=cfg.dataset.test_pose.batch_size,
 			dataset=test_dataset,
