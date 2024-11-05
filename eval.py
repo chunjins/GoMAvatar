@@ -372,6 +372,18 @@ def main(args):
 		ckpt_path = os.path.join(ckpt_dir, f'iter_{args.iter}.pt')
 	logging.info(f'loading model from {ckpt_path}')
 	ckpt = torch.load(ckpt_path)
+
+	# # Load the checkpoint
+	# checkpoint = torch.load(ckpt_path)
+	# # Print the parameter names and their sizes
+	# for name, param in checkpoint['network'].items():
+	# 	print(f"Parameter: {name}, Size: {param.size()}")
+	#
+	# # Get the number of learnable parameters
+	# total_params = sum(param.numel() for param in checkpoint['network'].values())
+	# print(f"Total number of learnable parameters: {total_params}")
+
+
 	model.load_state_dict(ckpt['network'], strict=False)
 
 	model.cuda()
@@ -382,6 +394,13 @@ def main(args):
 		param_size += param.nelement() * param.element_size()
 	size_all_mb = param_size / 1024 ** 2
 	logging.info('model size: {:.3f}MB'.format(size_all_mb))
+
+	# for name, param in model.named_parameters():
+	# 	print(f"Parameter: {name}, Size: {param.size()}")
+	# 
+	# 
+	# total_params = sum(param.numel() for param in model.parameters())
+	# print(f"Total number of learnable parameters: {total_params}")
 
 	if args.type == 'pose' or args.type == 'video' or args.type == 'tpose' or args.type == 'pose_mdm':
 		# disable pose refinement when poses are not in training
