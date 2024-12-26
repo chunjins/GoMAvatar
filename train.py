@@ -32,14 +32,15 @@ from pytorch3d.loss import (
 from eval import Evaluator
 
 EXCLUDE_KEYS_TO_GPU = ['frame_name', 'img_width', 'img_height']
-os.environ['TORCH_HOME'] = '/ubc/cs/home/c/chunjins/chunjin_shield/project/humannerf/torch'
+os.environ['TORCH_HOME'] = '/ubc/cs/home/c/chunjins/chunjin_shield/project/torch'
 
 def parse_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
         "--cfg",
-        default='exps/monoperfcap/nadia.yaml',
+        default='exps/actorhq/actor0301.yaml',
+        # default='exps/youtube/invisable.yaml',
         type=str
     )
     parser.add_argument(
@@ -272,6 +273,8 @@ def main(args):
         ckpt_path = os.path.join(ckpt_dir, f'iter_{max_iter}.pt')
         ckpt = torch.load(ckpt_path)
 
+        print(ckpt_path)
+
         for i in cfg.model.subdivide_iters:
             if max_iter >= i:
                 model.subdivide()
@@ -307,6 +310,7 @@ def main(args):
         loss_funcs['laplacian_func'] = LaplacianLoss(canonical_info['edges'], canonical_info['canonical_vertex'].shape[0]).cuda()
 
     while n_iters <= cfg.train.total_iters:
+        print('n_iters', n_iters)
         for batch_idx, batch in enumerate(train_dataloader):
             tb_logger.set_global_step(n_iters)
 

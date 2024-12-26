@@ -40,7 +40,7 @@ def parse_args():
 	)
 	parser.add_argument(
 		"--cfg",
-		default='exps/monoperfcap/oleks.yaml',
+		default='exps/actorhq/actor0301.yaml',
 		type=str
 	)
 	parser.add_argument(

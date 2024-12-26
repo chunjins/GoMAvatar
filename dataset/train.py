@@ -122,7 +122,7 @@ class Dataset(torch.utils.data.Dataset):
 
     def load_train_frames(self):
         img_paths = list_files(os.path.join(self.dataset_path, 'images'),
-                               exts=['.png'])
+                               exts=['.png', '.jpg'])
         return [split_path(ipath)[1] for ipath in img_paths]
     
     def query_dst_skeleton(self, frame_name):
@@ -136,7 +136,8 @@ class Dataset(torch.utils.data.Dataset):
         }
     
     def load_image(self, frame_name, bg_color):
-        imagepath = os.path.join(self.image_dir, '{}.png'.format(frame_name))
+        imagepath = os.path.join(self.image_dir, '{}.jpg'.format(frame_name))
+        # imagepath = os.path.join(self.image_dir, '{}.png'.format(frame_name))
         orig_img = np.array(load_image(imagepath))
         orig_H, orig_W, _ = orig_img.shape
 
