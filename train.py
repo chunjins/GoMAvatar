@@ -14,7 +14,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 
 from configs import make_cfg
-from dataset.train import Dataset
+from dataset.train_h5py import Dataset
 from models.model import Model
 
 from utils.train_util import cpu_data_to_gpu, make_weights_for_pose_balance
@@ -39,7 +39,7 @@ def parse_args():
 
     parser.add_argument(
         "--cfg",
-        default='exps/actorhq/actor0301.yaml',
+        default='exps/mvhuman/mvhuman_100990.yaml',
         # default='exps/youtube/invisable.yaml',
         type=str
     )

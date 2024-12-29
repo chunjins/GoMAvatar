@@ -15,7 +15,7 @@ def make_cfg(cfg_filename):
 	if cfg_filename is not None:
 		cfg.merge_from_file(cfg_filename)
 
-	log_root = 'log' if not hasattr(cfg, 'save_dir') else cfg.save_dir
+	log_root = '../log' if not hasattr(cfg, 'save_dir') else cfg.save_dir
 	cfg.save_dir = os.path.join(log_root, cfg.exp_name)
 
 	return cfg

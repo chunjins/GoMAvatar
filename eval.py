@@ -200,13 +200,13 @@ def main(args):
 		save_dir = os.path.join(cfg.save_dir, 'eval', args.type)
 		os.makedirs(save_dir, exist_ok=True)
 	else:
-		save_dir = os.path.join(cfg.save_dir, 'eval', args.type)
-		save_dir_normal = os.path.join(cfg.save_dir, 'eval', args.type + '_normal')
+		save_dir = os.path.join(cfg.save_dir, 'eval', f'novel_{args.type}')
+		save_dir_normal = os.path.join(cfg.save_dir, 'eval', f'novel_{args.type}' + '_normal')
 		os.makedirs(save_dir, exist_ok=True)
 		os.makedirs(save_dir_normal, exist_ok=True)
 
 	# setup logger
-	logging_path = os.path.join(cfg.save_dir, 'eval', f'log_{args.type}.txt')
+	logging_path = os.path.join(cfg.save_dir, 'eval', f'log_novel_{args.type}.txt')
 	logging.basicConfig(
 		handlers=[
 			logging.FileHandler(logging_path),
