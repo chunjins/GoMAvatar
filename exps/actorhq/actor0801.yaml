@@ -1,4 +1,4 @@
-exp_name: "actor0101"
+exp_name: "actor0801"
 save_dir: '../log/actorhq'
 
 random_bgcolor: true
@@ -8,7 +8,7 @@ img_size: [747, 1022]  # W H
 dataset:
   train:
     name: 'actorhq'
-    dataset_path: "../dataset/actorhq/actor0101_training.h5"
+    dataset_path: "../dataset/actorhq/actor0801_training.h5"
     batch_size: 1
     num_workers: 1
 
@@ -16,16 +16,16 @@ dataset:
 
   test_view:
     name: 'actorhq'
-    dataset_path: "../dataset/actorhq/actor0101_novel_view.h5"
-    raw_dataset_path: "../dataset/actorhq/actor0101_novel_view.h5"
+    dataset_path: "../dataset/actorhq/actor0801_novel_view.h5"
+    raw_dataset_path: "../dataset/actorhq/actor0801_novel_view.h5"
     batch_size: 1
     num_workers: 1
     skip: 1
 
   test_mesh:
     name: 'actorhq'
-    dataset_path: "../dataset/actorhq/actor0101_training.h5"
-    raw_dataset_path: "../dataset/actorhq/actor0101_training.h5"
+    dataset_path: "../dataset/actorhq/actor0801_training.h5"
+    raw_dataset_path: "../dataset/actorhq/actor0801_training.h5"
     batch_size: 1
     num_workers: 1
     skip: 1
@@ -33,25 +33,25 @@ dataset:
 
   test_pose:
     name: 'actorhq'
-    dataset_path: "../dataset/actorhq/actor0101_novel_pose.h5"
-    raw_dataset_path: "../dataset/actorhq/actor0101_novel_pose.h5"
+    dataset_path: "../dataset/actorhq/actor0801_novel_pose.h5"
+    raw_dataset_path: "../dataset/actorhq/actor0801_novel_pose.h5"
     batch_size: 1
     num_workers: 1
     skip: 1
 
   test_pose_mdm:
-    dataset_path: "../dataset/actorhq/actor0101_training.h5"
+    dataset_path: "../dataset/actorhq/actor0801_training.h5"
     pose_path: ""
     batch_size: 1
     num_workers: 1
 
   test_on_train:
-    dataset_path: "../dataset/actorhq/actor0101_training.h5"
+    dataset_path: "../dataset/actorhq/actor0801_training.h5"
     batch_size: 1
     num_workers: 1
 
   test_freeview:
-    dataset_path: "../dataset/actorhq/actor0101_training.h5"
+    dataset_path: "../dataset/actorhq/actor0801_training.h5"
     batch_size: 1
     num_workers: 1
     src_type: 'actorhq'

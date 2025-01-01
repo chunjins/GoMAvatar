@@ -1,63 +1,63 @@
-exp_name: "actor0101"
-save_dir: '../log/actorhq'
+exp_name: "0056"
+save_dir: '../log/mpi'
 
 random_bgcolor: true
 bgcolor: [255., 255., 255.]
-img_size: [747, 1022]  # W H
+img_size: [1024, 749]  # W H
 
 dataset:
   train:
-    name: 'actorhq'
-    dataset_path: "../dataset/actorhq/actor0101_training.h5"
+    name: 'mpi'
+    dataset_path: "../dataset/mpi/0056_training.h5"
     batch_size: 1
     num_workers: 1
 
     maxframes: -2
 
   test_view:
-    name: 'actorhq'
-    dataset_path: "../dataset/actorhq/actor0101_novel_view.h5"
-    raw_dataset_path: "../dataset/actorhq/actor0101_novel_view.h5"
+    name: 'mpi'
+    dataset_path: "../dataset/mpi/0056_novel_view.h5"
+    raw_dataset_path: "../dataset/mpi/0056_novel_view.h5"
     batch_size: 1
     num_workers: 1
     skip: 1
 
   test_mesh:
-    name: 'actorhq'
-    dataset_path: "../dataset/actorhq/actor0101_training.h5"
-    raw_dataset_path: "../dataset/actorhq/actor0101_training.h5"
+    name: 'mpi'
+    dataset_path: "../dataset/mpi/0056_training.h5"
+    raw_dataset_path: "../dataset/mpi/0056_training.h5"
     batch_size: 1
     num_workers: 1
     skip: 1
     idxs: []
 
   test_pose:
-    name: 'actorhq'
-    dataset_path: "../dataset/actorhq/actor0101_novel_pose.h5"
-    raw_dataset_path: "../dataset/actorhq/actor0101_novel_pose.h5"
+    name: 'mpi'
+    dataset_path: "../dataset/mpi/0056_novel_pose.h5"
+    raw_dataset_path: "../dataset/mpi/0056_novel_pose.h5"
     batch_size: 1
     num_workers: 1
     skip: 1
 
   test_pose_mdm:
-    dataset_path: "../dataset/actorhq/actor0101_training.h5"
+    dataset_path: "../dataset/mpi/0056_training.h5"
     pose_path: ""
     batch_size: 1
     num_workers: 1
 
   test_on_train:
-    dataset_path: "../dataset/actorhq/actor0101_training.h5"
+    dataset_path: "../dataset/mpi/0056_training.h5"
     batch_size: 1
     num_workers: 1
 
   test_freeview:
-    dataset_path: "../dataset/actorhq/actor0101_training.h5"
+    dataset_path: "../dataset/mpi/0056_training.h5"
     batch_size: 1
     num_workers: 1
-    src_type: 'actorhq'
+    src_type: 'mpi'
 
 model:
-  img_size: [747, 1022]  # W H
+  img_size: [1024, 749]  # W H
   subdivide_iters: [50001]
 
   appearance:

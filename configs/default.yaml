@@ -137,7 +137,7 @@ train:
   lr_update_exp: true
   lr_decay_steps: 100000
 
-  log_freq: 10
-  tb_freq: 100
-  save_freq: 1000
+  log_freq: 500
+  tb_freq: 1000
+  save_freq: 10000
   eval_freq: 50000

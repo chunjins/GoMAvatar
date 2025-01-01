@@ -28,19 +28,20 @@ from torchmetrics.image.lpip import LearnedPerceptualImagePatchSimilarity
 EXCLUDE_KEYS_TO_GPU = ['frame_name', 'img_width', 'img_height']
 POSE_COLORS = (np.array(sns.color_palette("hls", 36)) * 255.).astype(int).tolist()
 
+os.environ['TORCH_HOME'] = '/ubc/cs/home/c/chunjins/chunjin_shield/project/torch'
 
 def parse_args():
 	parser = argparse.ArgumentParser()
 
 	parser.add_argument(
 		"--type",
-		default='pose',
+		default='view',
 		choices=['view', 'pose', 'train', 'freeview', 'pose_mdm', 'video', 'mesh'],
 		type=str
 	)
 	parser.add_argument(
 		"--cfg",
-		default='exps/actorhq/actor0301.yaml',
+		default='exps/mvhuman/mvhuman_100846.yaml',
 		type=str
 	)
 	parser.add_argument(
@@ -230,7 +231,7 @@ def main(args):
 				bgcolor=cfg.bgcolor,
 			)
 		else:
-			from dataset.train import Dataset as NovelViewDataset
+			from dataset.train_h5py import Dataset as NovelViewDataset
 			test_dataset = NovelViewDataset(
 				cfg.dataset.test_view.dataset_path,
 				bgcolor=cfg.bgcolor,
@@ -257,7 +258,7 @@ def main(args):
 				bgcolor=cfg.bgcolor,
 			)
 		else:
-			from dataset.train import Dataset as NovelViewDataset
+			from dataset.train_h5py import Dataset as NovelViewDataset
 			test_dataset = NovelViewDataset(
 				cfg.dataset.test_view.dataset_path,
 				bgcolor=cfg.bgcolor,
@@ -283,7 +284,7 @@ def main(args):
 				bgcolor=cfg.bgcolor,
 			)
 		else:
-			from dataset.train import Dataset as NovelPoseDataset
+			from dataset.train_h5py import Dataset as NovelPoseDataset
 			test_dataset = NovelPoseDataset(
 				cfg.dataset.test_pose.dataset_path,
 				bgcolor=cfg.bgcolor,
@@ -464,9 +465,9 @@ def main(args):
 			normal_mask = 1. - outputs['normal_mask']
 
 			normal_map = normal_pred.detach().cpu().numpy()
-			# normal_mask = normal_mask[..., None].detach().cpu().numpy()
-			# normal_imgs = 255. - (normal_map - normal_mask + 1) * 0.5 * 255. # for white bg
-			normal_imgs = 255. - (normal_map + 1) * 0.5 * 255. # for grey bg
+			normal_mask = normal_mask[..., None].detach().cpu().numpy()
+			normal_imgs = 255. - (normal_map - normal_mask + 1) * 0.5 * 255. # for white bg
+			# normal_imgs = 255. - (normal_map + 1) * 0.5 * 255. # for grey bg
 			normal_imgs = (normal_imgs).astype(np.uint8)
 
 			if args.type == 'view' or args.type == 'pose' or args.type == 'train':
