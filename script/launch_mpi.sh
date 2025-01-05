@@ -11,5 +11,6 @@ SUBJECTS=('0056' 'FranziRed' 'Antonia' 'Magdalena')
 
 SUBJECT=${SUBJECTS[id-1]}
 
-python train.py --cfg exps/${DATASET}/${SUBJECT}.yaml
-#python eval.py --cfg exps/${DATASET}/${DATASET}_${SUBJECT}.yaml --type view
+#python train.py --cfg exps/${DATASET}/${SUBJECT}.yaml --resume
+#python eval.py --cfg exps/${DATASET}/${SUBJECT}.yaml --type view
+python eval.py --cfg exps/${DATASET}/${SUBJECT}.yaml --type pose

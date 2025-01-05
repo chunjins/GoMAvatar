@@ -3,7 +3,7 @@ conda activate GoMAvatar
 
 cd /ubc/cs/home/c/chunjins/chunjin_shield/project/gomavatar/code
 
-id=4
+id=$1
 
 DATASET='actorhq'
 SUBJECTS=('actor0101' 'actor0301' 'actor0601' 'actor0701' 'actor0801')
