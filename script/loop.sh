@@ -17,8 +17,8 @@ done
 #DATASET='mvhuman'
 #subjects=('100846' '100990' '102107' '102145' '103708' '200173' '204112' '204129')
 #for SUBJECT in "${subjects[@]}"; do
-#  python eval.py --cfg exps/${DATASET}/${SUBJECT}.yaml --type view
-#  python eval.py --cfg exps/${DATASET}/${SUBJECT}.yaml --type mesh_novel_view
+#  python eval.py --cfg exps/${DATASET}/${DATASET}_${SUBJECT}.yaml --type view
+#  python eval.py --cfg exps/${DATASET}/${DATASET}_${SUBJECT}.yaml --type mesh_novel_view
 #done
 #
 #DATASET='mpi'

@@ -37,7 +37,7 @@ def parse_args():
 
 	parser.add_argument(
 		"--type",
-		default='mesh_novel_view',
+		default='view',
 		choices=['view', 'pose', 'train', 'freeview', 'pose_mdm', 'video', 'mesh'],
 		type=str
 	)
@@ -396,7 +396,7 @@ def main(args):
 			num_workers=cfg.dataset.test_view.num_workers)
 	elif args.type == 'pose':
 		# evaluate novel pose synthesis following monohuman's split
-		if cfg.dataset.test_mesh.name == 'zju-mocap':
+		if cfg.dataset.test_pose.name == 'zju-mocap':
 			from dataset.test import Dataset as NovelPoseDataset
 			test_dataset = NovelPoseDataset(
 				cfg.dataset.test_pose.raw_dataset_path,
@@ -639,7 +639,7 @@ def main(args):
 				save_imgs = np.concatenate([pred_img, depth_map_image, normal_img, depth_normal_image], axis=1)
 				Image.fromarray(save_imgs).save(os.path.join(save_dir, frame_name + '.png'))
 
-	np.savez(os.path.join(config.save_dir, 'eval', f'geometry_novel_{args.type}.npz'), **geometry_dict)
+	np.savez(os.path.join(cfg.save_dir, 'eval', f'geometry_novel_{args.type}.npz'), **geometry_dict)
 
 	# evaluator.summarize(os.path.join(cfg.save_dir, 'eval', f'metric_{args.type}.npy'))
 

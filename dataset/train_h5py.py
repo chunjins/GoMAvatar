@@ -233,7 +233,7 @@ class Dataset(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         frame_id = self.framelist[idx]
-        frame_name = self.frames_name[idx].decode('UTF-8')
+        frame_name = self.frames_name[frame_id].decode('UTF-8')
         results = {
             'frame_name': frame_name
         }
