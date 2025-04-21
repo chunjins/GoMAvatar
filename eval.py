@@ -320,33 +320,6 @@ def main(args):
 			shuffle=False,
 			drop_last=False,
 			num_workers=cfg.dataset.test_view.num_workers)
-	elif args.type == 'mesh':
-		# evaluate novel view synthesis following monohuman's split
-		if cfg.dataset.test_mesh.name == 'zju-mocap':
-			from dataset.test import Dataset as MeshDataset
-			test_dataset = MeshDataset(
-				cfg.dataset.test_mesh.raw_dataset_path,
-				cfg.dataset.test_mesh.dataset_path,
-				test_type='mesh',
-				idxs=cfg.dataset.test_mesh.idxs,
-				skip=cfg.dataset.test_mesh.skip,  # to match monohuman
-				exclude_view=cfg.dataset.test_mesh.exclude_view,
-				bgcolor=cfg.bgcolor,
-			)
-		else:
-			from dataset.train_h5py import Dataset as NovelViewDataset
-			test_dataset = NovelViewDataset(
-				cfg.dataset.test_view.dataset_path,
-				bgcolor=cfg.bgcolor,
-				skip=cfg.dataset.test_mesh.skip,
-				target_size=cfg.model.img_size,
-			)
-		test_dataloader = torch.utils.data.DataLoader(
-			batch_size=cfg.dataset.test_view.batch_size,
-			dataset=test_dataset,
-			shuffle=False,
-			drop_last=False,
-			num_workers=cfg.dataset.test_view.num_workers)
 	elif args.type == 'mesh_training':
 		from dataset.train_h5py import Dataset as TrainingDataset
 		test_dataset = TrainingDataset(
@@ -550,7 +523,7 @@ def main(args):
 			bgcolor_tensor = torch.tensor(cfg.bgcolor).float()[None].to(pred.device) / 255.
 			pred = unpack(pred, mask, bgcolor_tensor)
 
-		if args.type == 'mesh':
+		if args.type == 'mesh_training' or args.type == 'mesh_novel_view' or args.type == 'mesh_novel_pose':
 			# mesh = outputs['mesh']
 			# frame_name = batch['frame_name'][0]
 			# io3d().save_mesh(mesh, f'{save_dir}/{frame_name}.ply')
@@ -639,7 +612,8 @@ def main(args):
 				save_imgs = np.concatenate([pred_img, depth_map_image, normal_img, depth_normal_image], axis=1)
 				Image.fromarray(save_imgs).save(os.path.join(save_dir, frame_name + '.png'))
 
-	np.savez(os.path.join(cfg.save_dir, 'eval', f'geometry_novel_{args.type}.npz'), **geometry_dict)
+	if args.type == 'view' or args.type == 'pose':
+		np.savez(os.path.join(cfg.save_dir, 'eval', f'geometry_novel_{args.type}.npz'), **geometry_dict)
 
 	# evaluator.summarize(os.path.join(cfg.save_dir, 'eval', f'metric_{args.type}.npy'))
 

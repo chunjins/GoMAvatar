@@ -1,4 +1,5 @@
 exp_name: "mvhuman_100846"
+save_dir: '../log/mvhuman'
 
 random_bgcolor: true
 bgcolor: [255., 255., 255.]
