@@ -20,16 +20,7 @@ dataset:
     raw_dataset_path: "../dataset/actorhq/actor0301_novel_view.h5"
     batch_size: 1
     num_workers: 1
-    skip: 1
-
-  test_mesh:
-    name: 'actorhq'
-    dataset_path: "../dataset/actorhq/actor0301_training.h5"
-    raw_dataset_path: "../dataset/actorhq/actor0301_training.h5"
-    batch_size: 1
-    num_workers: 1
-    skip: 1
-    idxs: []
+    skip: 15
 
   test_pose:
     name: 'actorhq'
@@ -37,7 +28,34 @@ dataset:
     raw_dataset_path: "../dataset/actorhq/actor0301_novel_pose.h5"
     batch_size: 1
     num_workers: 1
+    skip: 5
+
+  test_mesh_training:
+    name: 'actorhq'
+    dataset_path: "../dataset/actorhq/actor0301_training.h5"
+    raw_dataset_path: "../dataset/actorhq/actor0301_training.h5"
+    batch_size: 1
+    num_workers: 1
     skip: 1
+    idxs: [ ]
+
+  test_mesh_novel_view:
+    name: 'actorhq'
+    dataset_path: "../dataset/actorhq/actor0301_novel_view.h5"
+    raw_dataset_path: "../dataset/actorhq/actor0301_novel_view.h5"
+    batch_size: 1
+    num_workers: 1
+    skip: 1
+    idxs: [ ]
+
+  test_mesh_novel_pose:
+    name: 'actorhq'
+    dataset_path: "../dataset/actorhq/actor0301_novel_pose.h5"
+    raw_dataset_path: "../dataset/actorhq/actor0301_novel_pose.h5"
+    batch_size: 1
+    num_workers: 1
+    skip: 1
+    idxs: [ ]
 
   test_pose_mdm:
     dataset_path: "../dataset/actorhq/actor0301_training.h5"

@@ -29,6 +29,7 @@ class Dataset(torch.utils.data.Dataset):
             crop_size=[-1, -1],
             prefetch=False,
             split_for_pose=False,
+            type=None
     ):
         self.cfg = {
             'bbox_offset': 0.3,
@@ -57,6 +58,14 @@ class Dataset(torch.utils.data.Dataset):
         if split_for_pose:
             logging.info('use monohuman split')
             self.framelist = self.framelist[:-(len(self.framelist) // 5)]
+
+        if type is not None and 'mesh' in type:
+            Nframes = 20
+            frames_name = self.dataset['frames_name'][:]
+            frames_list = np.unique(np.array([name.decode('utf-8').split('_')[-1] for name in frames_name]))
+            skip = int(len(frames_list) / Nframes)
+            self.framelist = list(range(0, len(frames_list), skip))
+
         logging.info(f' -- Total Frames: {self.get_total_frames()}')
 
         self.keyfilter = keyfilter

@@ -242,7 +242,7 @@ class Model(nn.Module):
 		opacity = appearance_feats.new_ones(B, F, 1)
 		bg_col = torch.cat([bg_feat, bg_feat.new_zeros([1])])
 
-		albedos, masks = self.renderer(
+		albedos, masks, depth = self.renderer(
 			xyz_observation.unsqueeze(0).permute(0, 2, 1),
 			appearance_feats.unsqueeze(0).permute(0, 2, 1),
 			opacity,
@@ -300,10 +300,15 @@ class Model(nn.Module):
 			outputs['normal_mask'] = normal_mask[..., 0]
 			outputs['shadow'] = shadings
 		else:
+			outputs['verts'] = vertices_observation.permute(1, 0)
+			outputs['faces'] = self.faces
+			outputs['colors'] = appearance_feats.permute(1, 0)
+
 			outputs['mesh'] = mesh_observation
 			outputs['mesh_canonical'] = mesh_canonical
 			outputs['normal'] = normal
 			outputs['normal_mask'] = normal_mask[..., 0]
+			outputs['depth'] = depth
 
 		return rgbs, masks, outputs
 

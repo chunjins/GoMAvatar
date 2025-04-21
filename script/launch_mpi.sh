@@ -7,7 +7,9 @@ cd /ubc/cs/home/c/chunjins/chunjin_shield/project/gomavatar/code
 id=$1
 
 DATASET='mpi'
-SUBJECTS=('0056' 'FranziRed' 'Antonia' 'Magdalena')
+#SUBJECTS=('0056' 'FranziRed' 'Antonia' 'Magdalena')
+SUBJECTS=('0056' 'FranziRed')
+
 
 SUBJECT=${SUBJECTS[id-1]}
 
