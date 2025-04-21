@@ -20,7 +20,7 @@ from utils.train_util import cpu_data_to_gpu
 from utils.image_util import to_8b_image
 from utils.tb_util import TBLogger
 
-from utils.lpips import LPIPS
+# from utils.lpips import LPIPS
 from skimage.metrics import structural_similarity
 from torchmetrics import PeakSignalNoiseRatio, StructuralSimilarityIndexMeasure
 from torchmetrics.image.lpip import LearnedPerceptualImagePatchSimilarity
@@ -37,8 +37,8 @@ def parse_args():
 
 	parser.add_argument(
 		"--type",
-		default='view',
-		choices=['view', 'pose', 'train', 'freeview', 'pose_mdm', 'video', 'mesh'],
+		default='mesh_novel_pose',
+		choices=['view', 'pose', 'train', 'freeview', 'pose_mdm', 'video', 'mesh_training', 'mesh_novel_pose', 'mesh_novel_view'],
 		type=str
 	)
 	parser.add_argument(
@@ -168,9 +168,9 @@ class Evaluator:
 	"""
 
 	def __init__(self):
-		self.lpips_model = LPIPS(net='vgg').cuda()
-		for param in self.lpips_model.parameters():
-			param.requires_grad = False
+		# self.lpips_model = LPIPS(net='vgg').cuda()
+		# for param in self.lpips_model.parameters():
+		# 	param.requires_grad = False
 		self.mse = []
 		self.psnr = []
 		self.ssim = []
@@ -503,11 +503,11 @@ def main(args):
 		# disable pose refinement when poses are not in training
 		model.pose_refinement_module = None
 
-	if args.type == 'view' and cfg.dataset.test_view.name == 'snapshot':
-		# follow anim-nerf and instantavatar's evaluation
-		evaluator = Evaluator_snapshot()
-	else:
-		evaluator = Evaluator()
+	# if args.type == 'view' and cfg.dataset.test_view.name == 'snapshot':
+	# 	# follow anim-nerf and instantavatar's evaluation
+	# 	evaluator = Evaluator_snapshot()
+	# else:
+	# 	evaluator = Evaluator()
 
 	geometry_dict = {}
 	for batch_idx, batch in enumerate(test_dataloader):
@@ -523,7 +523,7 @@ def main(args):
 			bgcolor_tensor = torch.tensor(cfg.bgcolor).float()[None].to(pred.device) / 255.
 			pred = unpack(pred, mask, bgcolor_tensor)
 
-		if args.type == 'mesh_training' or args.type == 'mesh_novel_view' or args.type == 'mesh_novel_pose':
+		if 'mesh' in args.type:
 			# mesh = outputs['mesh']
 			# frame_name = batch['frame_name'][0]
 			# io3d().save_mesh(mesh, f'{save_dir}/{frame_name}.ply')
@@ -541,6 +541,7 @@ def main(args):
 
 			frame_name = batch['frame_name'][0]
 			mesh.export(f'{save_dir}/{frame_name}.ply')
+			print(f'{save_dir}/{frame_name}.ply')
 
 
 			# pred_imgs = pred.detach().cpu().numpy()
@@ -598,8 +599,8 @@ def main(args):
 			depth_map_image = depth_map_image.detach().cpu().numpy()
 			depth_map_image =  (depth_map_image * 255).astype(np.uint8)
 
-			if args.type == 'view' or args.type == 'pose' or args.type == 'train':
-				truth_imgs = data['target_rgbs'].detach().cpu().numpy()
+			# if args.type == 'view' or args.type == 'pose' or args.type == 'train':
+			# 	truth_imgs = data['target_rgbs'].detach().cpu().numpy()
 
 			for i, (frame_name, pred_img, mask_img, normal_img) in enumerate(zip(batch['frame_name'], pred_imgs, mask_imgs, normal_imgs)):
 				pred_img = to_8b_image(pred_img)
