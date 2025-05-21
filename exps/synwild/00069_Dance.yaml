@@ -1,4 +1,5 @@
 exp_name: "00069_Dance"
+save_dir: '../log/synwild'
 
 random_bgcolor: true
 bgcolor: [255., 255., 255.]
@@ -6,48 +7,60 @@ img_size: [960, 540]
 
 dataset:
   train:
-    dataset_path: "data/synwild/00069_Dance_training"
+    name: 'synwild'
+    dataset_path: "data/synwild/00069_Dance_training.h5"
     batch_size: 1
     num_workers: 1
 
     maxframes: -2
 
   test_view:
-    dataset_path: "data/synwild/00069_Dance_training"
-    raw_dataset_path: "data/synwild/00000_random_training"
+    name: 'synwild'
+    dataset_path: "data/synwild/00069_Dance_training.h5"
+    raw_dataset_path: "data/synwild/00000_random_training.h5"
     batch_size: 1
     num_workers: 1
     skip: 30
 
   test_mesh:
     name: 'synwild'
-    dataset_path: "data/synwild/00069_Dance_training"
-    raw_dataset_path: "data/synwild/00000_random_training"
+    dataset_path: "data/synwild/00069_Dance_training.h5"
+    raw_dataset_path: "data/synwild/00000_random_training.h5"
     batch_size: 1
     num_workers: 1
     skip: 1
     idxs: []
 
   test_pose:
-    dataset_path: "data/synwild/00069_Dance_training"
-    raw_dataset_path: "data/synwild/00000_random_training"
+    name: 'synwild'
+    dataset_path: "data/synwild/00069_Dance_training.h5"
+    raw_dataset_path: "data/synwild/00000_random_training.h5"
     batch_size: 1
     num_workers: 1
     skip: 30
+  
+  test_mesh_training:
+    name: 'synwild'
+    dataset_path: "../dataset/synwild/00069_Dance_training.h5"
+    raw_dataset_path: "../dataset/synwild/00069_Dance_training.h5"
+    batch_size: 1
+    num_workers: 1
+    skip: 1
+    idxs: [ ]
 
   test_pose_mdm:
-    dataset_path: "data/synwild/00069_Dance_training"
+    dataset_path: "data/synwild/00069_Dance_training.h5"
     pose_path: ""
     batch_size: 1
     num_workers: 1
 
   test_on_train:
-    dataset_path: "data/synwild/00069_Dance_training"
+    dataset_path: "data/synwild/00069_Dance_training.h5"
     batch_size: 1
     num_workers: 1
 
   test_freeview:
-    dataset_path: "data/synwild/00069_Dance_training"
+    dataset_path: "data/synwild/00069_Dance_training.h5"
     batch_size: 1
     num_workers: 1
     src_type: 'zju_mocap'
