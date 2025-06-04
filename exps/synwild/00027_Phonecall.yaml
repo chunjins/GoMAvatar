@@ -8,7 +8,7 @@ img_size: [960, 540]
 dataset:
   train:
     name: 'synwild'
-    dataset_path: "data/synwild/00027_Phonecall_training.h5"
+    dataset_path: "../dataset/synwild/00027_Phonecall_training.h5"
     batch_size: 1
     num_workers: 1
 
@@ -16,16 +16,16 @@ dataset:
 
   test_view:
     name: 'synwild'
-    dataset_path: "data/synwild/00027_Phonecall_training.h5"
-    raw_dataset_path: "data/synwild/00000_random_training.h5"
+    dataset_path: "../dataset/synwild/00027_Phonecall_training.h5"
+    raw_dataset_path: "../dataset/synwild/00000_random_training.h5"
     batch_size: 1
     num_workers: 1
     skip: 30
 
   test_mesh:
     name: 'synwild'
-    dataset_path: "data/synwild/00027_Phonecall_training.h5"
-    raw_dataset_path: "data/synwild/00000_random_training.h5"
+    dataset_path: "../dataset/synwild/00027_Phonecall_training.h5"
+    raw_dataset_path: "../dataset/synwild/00000_random_training.h5"
     batch_size: 1
     num_workers: 1
     skip: 1
@@ -33,8 +33,8 @@ dataset:
 
   test_pose:
     name: 'synwild'
-    dataset_path: "data/synwild/00027_Phonecall_training.h5"
-    raw_dataset_path: "data/synwild/00000_random_training.h5"
+    dataset_path: "../dataset/synwild/00027_Phonecall_training.h5"
+    raw_dataset_path: "../dataset/synwild/00000_random_training.h5"
     batch_size: 1
     num_workers: 1
     skip: 30
@@ -49,18 +49,18 @@ dataset:
     idxs: [ ]
 
   test_pose_mdm:
-    dataset_path: "data/synwild/00027_Phonecall_training.h5"
+    dataset_path: "../dataset/synwild/00027_Phonecall_training.h5"
     pose_path: ""
     batch_size: 1
     num_workers: 1
 
   test_on_train:
-    dataset_path: "data/synwild/00027_Phonecall_training.h5"
+    dataset_path: "../dataset/synwild/00027_Phonecall_training.h5"
     batch_size: 1
     num_workers: 1
 
   test_freeview:
-    dataset_path: "data/synwild/00027_Phonecall_training.h5"
+    dataset_path: "../dataset/synwild/00027_Phonecall_training.h5"
     batch_size: 1
     num_workers: 1
     src_type: 'zju_mocap'
