@@ -381,9 +381,9 @@ def main(args):
                 logging.info(f'saved to {ckpt_path}')
 
             # # evaluate
-            if n_iters % cfg.train.eval_freq == 0:
+            # if n_iters % cfg.train.eval_freq == 0:
             #     evaluate(test_dataloader, model, tb_logger, 'test', cfg.random_bgcolor, n_iters)
-                evaluate(test_on_train_dataloader, model, tb_logger, 'train', cfg.random_bgcolor, n_iters)
+            #     evaluate(test_on_train_dataloader, model, tb_logger, 'train', cfg.random_bgcolor, n_iters)
 
             n_iters += 1
             if n_iters > cfg.train.total_iters:

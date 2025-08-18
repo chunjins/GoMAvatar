@@ -168,9 +168,9 @@ class Evaluator:
 	"""
 
 	def __init__(self):
-		# self.lpips_model = LPIPS(net='vgg').cuda()
-		# for param in self.lpips_model.parameters():
-		# 	param.requires_grad = False
+		self.lpips_model = LPIPS(net='vgg').cuda()
+		for param in self.lpips_model.parameters():
+			param.requires_grad = False
 		self.mse = []
 		self.psnr = []
 		self.ssim = []
