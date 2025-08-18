@@ -1,4 +1,5 @@
 exp_name: "mvhuman_204112"
+save_dir: '../log/mvhuman'
 
 random_bgcolor: true
 bgcolor: [255., 255., 255.]
@@ -21,7 +22,7 @@ dataset:
     raw_dataset_path: "../dataset/mvhuman/204112_novel_view.h5"
     batch_size: 1
     num_workers: 1
-    skip: 1
+    skip: 10
 
   test_mesh:
     name: 'mvhuman'
@@ -30,7 +31,7 @@ dataset:
     batch_size: 1
     num_workers: 1
     skip: 1
-    idxs: []
+    idxs: [ ]
 
   test_pose:
     name: 'mvhuman'
@@ -39,6 +40,33 @@ dataset:
     batch_size: 1
     num_workers: 1
     skip: 1
+
+  test_mesh_training:
+    name: 'mvhuman'
+    dataset_path: "../dataset/mvhuman/204112_training.h5"
+    raw_dataset_path: "../dataset/mvhuman/204112_training.h5"
+    batch_size: 1
+    num_workers: 1
+    skip: 1
+    idxs: [ ]
+
+  test_mesh_novel_view:
+    name: 'mvhuman'
+    dataset_path: "../dataset/mvhuman/204112_novel_view.h5"
+    raw_dataset_path: "../dataset/mvhuman/204112_novel_view.h5"
+    batch_size: 1
+    num_workers: 1
+    skip: 1
+    idxs: [ ]
+
+  test_mesh_novel_pose:
+    name: 'mvhuman'
+    dataset_path: "../dataset/mvhuman/204112_novel_pose.h5"
+    raw_dataset_path: "../dataset/mvhuman/204112_novel_pose.h5"
+    batch_size: 1
+    num_workers: 1
+    skip: 1
+    idxs: [ ]
 
   test_pose_mdm:
     dataset_path: "../dataset/mvhuman/204112_training.h5"

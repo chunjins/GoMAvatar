@@ -74,27 +74,25 @@ class Renderer(nn.Module):
 			cov[0, :, 2, 2]
 		], dim=-1)
 
-		C = feat.shape[-1]
-		if C % 3 != 0:
-			C_add = 3 - C % 3
-			feat = torch.cat([feat, feat[..., :C_add]], dim=-1)
-		preds = []
-		for i in range(0, feat.shape[-1], 3):
-			pred, _, _, _ = self.renderer(
-				means3D=xyzs_observation[0].T,
-				means2D=means2D,
-				colors_precomp=feat[0, :, i:i+3],
-				shs=None,
-				opacities=opacity[0, :],
-				scales=None,
-				rotations=None,
-				cov3D_precomp=cov_packed)
-			preds.append(pred)
-		pred = torch.cat(preds, dim=0)
-		pred = pred[:C]
+		# C = feat.shape[-1]
+		# if C % 3 != 0:
+		# 	C_add = 3 - C % 3
+		# 	feat = torch.cat([feat, feat[..., :C_add]], dim=-1)
+		ret = self.renderer(
+			means3D=xyzs_observation[0].T,
+			means2D=means2D,
+			colors_precomp=feat[0, :, :3],
+			shs=None,
+			opacities=opacity[0, :],
+			scales=None,
+			rotations=None,
+			cov3D_precomp=cov_packed)
+		pred, radii, depth, alpha = ret
 
 		# transpose the image
 		# gaussian splatting defines x along height
 		pred = pred.permute(1, 2, 0)[None]
+		alpha = alpha.permute(1, 2, 0)[None]
+		depth = depth.permute(1, 2, 0)[None]
 
-		return pred[..., :-1], pred[..., -1]
+		return pred, alpha.squeeze(-1), depth

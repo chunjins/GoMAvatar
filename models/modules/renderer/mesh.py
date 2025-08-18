@@ -80,8 +80,8 @@ class Renderer(nn.Module):
                 image_size=(module_cfg.img_size[1], module_cfg.img_size[0]),
                 blur_radius=0.0,
                 # faces_per_pixel=50,
-                max_faces_per_bin=20000,
-                bin_size=None,
+                max_faces_per_bin=10000,
+                bin_size=0,
             )
         else:
             raster_settings = RasterizationSettings(
