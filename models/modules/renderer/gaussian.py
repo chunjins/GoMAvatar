@@ -80,7 +80,7 @@ class Renderer(nn.Module):
 			feat = torch.cat([feat, feat[..., :C_add]], dim=-1)
 		preds = []
 		for i in range(0, feat.shape[-1], 3):
-			pred, _ = self.renderer(
+			pred, _, _, _ = self.renderer(
 				means3D=xyzs_observation[0].T,
 				means2D=means2D,
 				colors_precomp=feat[0, :, i:i+3],

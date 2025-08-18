@@ -273,7 +273,7 @@ def main(args):
         ckpt_path = os.path.join(ckpt_dir, f'iter_{max_iter}.pt')
         ckpt = torch.load(ckpt_path)
 
-        print(ckpt_path)
+        # print(ckpt_path)
 
         for i in cfg.model.subdivide_iters:
             if max_iter >= i:
