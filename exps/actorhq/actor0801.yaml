@@ -20,7 +20,7 @@ dataset:
     raw_dataset_path: "../dataset/actorhq/actor0801_novel_view.h5"
     batch_size: 1
     num_workers: 1
-    skip: 15
+    skip: 1
 
   test_pose:
     name: 'actorhq'
@@ -28,7 +28,7 @@ dataset:
     raw_dataset_path: "../dataset/actorhq/actor0801_novel_pose.h5"
     batch_size: 1
     num_workers: 1
-    skip: 5
+    skip: 1
 
   test_mesh_training:
     name: 'actorhq'

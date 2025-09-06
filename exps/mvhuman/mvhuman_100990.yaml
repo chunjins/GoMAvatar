@@ -22,7 +22,7 @@ dataset:
     raw_dataset_path: "../dataset/mvhuman/100990_novel_view.h5"
     batch_size: 1
     num_workers: 1
-    skip: 10
+    skip: 1
 
   test_mesh:
     name: 'mvhuman'
