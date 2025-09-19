@@ -4,13 +4,13 @@ conda activate GoMAvatar
 cd /ubc/cs/home/c/chunjins/chunjin_shield/project/gomavatar/code
 
 DATASET='actorhq'
-#subjects=('actor0101' 'actor0301' 'actor0601' 'actor0701')
-subjects=('actor0101' 'actor0601' 'actor0701')
+subjects=('actor0101' 'actor0301' 'actor0601' 'actor0701')
+#subjects=('actor0101' 'actor0601' 'actor0701')
 
 for SUBJECT in "${subjects[@]}"; do
   #python train.py --cfg exps/${DATASET}/${SUBJECT}.yaml --resume
   python eval.py --cfg exps/${DATASET}/${SUBJECT}.yaml --type view
-#  python eval.py --cfg exps/${DATASET}/${SUBJECT}.yaml --type pose
+  python eval.py --cfg exps/${DATASET}/${SUBJECT}.yaml --type pose
 #  python eval.py --cfg exps/${DATASET}/${SUBJECT}.yaml --type mesh_novel_view
 #  python eval.py --cfg exps/${DATASET}/${SUBJECT}.yaml --type mesh_novel_pose
 done

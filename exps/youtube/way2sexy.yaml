@@ -1,4 +1,5 @@
 exp_name: "way2sexy"
+save_dir: '../log/youtube'
 
 random_bgcolor: true
 bgcolor: [255., 255., 255.]
@@ -6,48 +7,51 @@ img_size: [640, 360]
 
 dataset:
   train:
-    dataset_path: "data/youtube/way2sexy_training"
+    name: 'youtube'
+    dataset_path: "../dataset/youtube/way2sexy_training.h5"
     batch_size: 1
     num_workers: 1
 
     maxframes: -2
 
   test_view:
-    dataset_path: "data/youtube/way2sexy_training"
-    raw_dataset_path: "data/youtube/way2sexy_training"
+    name: 'youtube'
+    dataset_path: "../dataset/youtube/way2sexy_training.h5"
+    raw_dataset_path: "../dataset/youtube/way2sexy_training.h5"
     batch_size: 1
     num_workers: 1
-    skip: 30
+    skip: 1
 
   test_mesh:
     name: 'youtube'
-    dataset_path: "data/youtube/way2sexy_training"
-    raw_dataset_path: "data/youtube/way2sexy_training"
+    dataset_path: "../dataset/youtube/way2sexy_training.h5"
+    raw_dataset_path: "../dataset/youtube/way2sexy_training.h5"
     batch_size: 1
     num_workers: 1
     skip: 1
     idxs: []
 
   test_pose:
-    dataset_path: "data/youtube/way2sexy_novel_pose"
-    raw_dataset_path: "data/youtube/way2sexy_novel_pose"
+    name: 'youtube'
+    dataset_path: "../dataset/youtube/way2sexy_novel_pose.h5"
+    raw_dataset_path: "../dataset/youtube/way2sexy_novel_pose.h5"
     batch_size: 1
     num_workers: 1
     skip: 1
 
   test_pose_mdm:
-    dataset_path: "data/youtube/way2sexy_training"
+    dataset_path: "../dataset/youtube/way2sexy_training.h5"
     pose_path: ""
     batch_size: 1
     num_workers: 1
 
   test_on_train:
-    dataset_path: "data/youtube/way2sexy_training"
+    dataset_path: "../dataset/youtube/way2sexy_training.h5"
     batch_size: 1
     num_workers: 1
 
   test_freeview:
-    dataset_path: "data/youtube/way2sexy_training"
+    dataset_path: "../dataset/youtube/way2sexy_training.h5"
     batch_size: 1
     num_workers: 1
     src_type: 'youtube'
@@ -131,7 +135,7 @@ train:
   lr_update_exp: true
   lr_decay_steps: 100000
 
-  log_freq: 300001
+  log_freq: 300
   tb_freq: 1000000
   eval_freq: 20000
   save_freq: 20000

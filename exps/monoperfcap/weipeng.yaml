@@ -1,4 +1,5 @@
 exp_name: "weipeng"
+save_dir: '../log/monoperfcap'
 
 random_bgcolor: true
 bgcolor: [255., 255., 255.]
@@ -6,48 +7,51 @@ img_size: [960, 540]
 
 dataset:
   train:
-    dataset_path: "data/monoperfcap/weipeng_training"
+    name: 'monoperfcap'
+    dataset_path: "../dataset/monoperfcap/weipeng_training.h5"
     batch_size: 1
     num_workers: 1
 
     maxframes: -2
 
   test_view:
-    dataset_path: "data/monoperfcap/weipeng_training"
-    raw_dataset_path: "data/monoperfcap/weipeng_training"
+    name: 'monoperfcap'
+    dataset_path: "../dataset/monoperfcap/weipeng_training.h5"
+    raw_dataset_path: "../dataset/monoperfcap/weipeng_training.h5"
     batch_size: 1
     num_workers: 1
-    skip: 30
+    skip: 1
 
   test_mesh:
     name: 'monoperfcap'
-    dataset_path: "data/monoperfcap/weipeng_training"
-    raw_dataset_path: "data/monoperfcap/weipeng_training"
+    dataset_path: "../dataset/monoperfcap/weipeng_training.h5"
+    raw_dataset_path: "../dataset/monoperfcap/weipeng_training.h5"
     batch_size: 1
     num_workers: 1
     skip: 1
     idxs: []
 
   test_pose:
-    dataset_path: "data/monoperfcap/weipeng_novel_pose"
-    raw_dataset_path: "data/monoperfcap/weipeng_novel_pose"
+    name: 'monoperfcap'
+    dataset_path: "../dataset/monoperfcap/weipeng_novel_pose.h5"
+    raw_dataset_path: "../dataset/monoperfcap/weipeng_novel_pose.h5"
     batch_size: 1
     num_workers: 1
     skip: 1
 
   test_pose_mdm:
-    dataset_path: "data/monoperfcap/weipeng_training"
+    dataset_path: "../dataset/monoperfcap/weipeng_training.h5"
     pose_path: ""
     batch_size: 1
     num_workers: 1
 
   test_on_train:
-    dataset_path: "data/monoperfcap/weipeng_training"
+    dataset_path: "../dataset/monoperfcap/weipeng_training.h5"
     batch_size: 1
     num_workers: 1
 
   test_freeview:
-    dataset_path: "data/monoperfcap/weipeng_training"
+    dataset_path: "../dataset/monoperfcap/weipeng_training.h5"
     batch_size: 1
     num_workers: 1
     src_type: 'monoperfcap'

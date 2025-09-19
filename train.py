@@ -31,6 +31,8 @@ from pytorch3d.loss import (
 
 from eval import Evaluator
 
+# os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
+
 EXCLUDE_KEYS_TO_GPU = ['frame_name', 'img_width', 'img_height']
 os.environ['TORCH_HOME'] = '/ubc/cs/home/c/chunjins/chunjin_shield/project/torch'
 
@@ -339,7 +341,19 @@ def main(args):
                 **loss_funcs
             )
 
-            loss.backward()
+            # if not torch.isfinite(loss):
+            #     print("Non-finite loss detected:", loss.item())
+            #     optimizer.zero_grad()
+            #     continue
+            # 
+            # try:
+            #     loss.backward()
+            # except RuntimeError as e:
+            #     print("Backward failed")
+            #     continue
+            # 
+            # torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+
             optimizer.step()
 
             if n_iters in cfg.model.subdivide_iters:
@@ -352,16 +366,16 @@ def main(args):
             update_lr(optimizer, n_iters, cfg.train)
 
             # log to tensorboard
-            if n_iters % cfg.train.log_freq == 0:
-                tb_logger.summ_scalar('loss_scaled/loss', loss)
-                for loss_name, loss_value in loss_items.items():
-                    tb_logger.summ_scalar(f'loss_scaled/loss_{loss_name}', loss_value['scaled'])
-                    tb_logger.summ_scalar(f'loss_unscaled/loss_{loss_name}', loss_value['unscaled'])
-
-                tb_logger.summ_image('input/rgb', data['target_rgbs'].permute(0, 3, 1, 2)[0])
-                tb_logger.summ_image('input/mask', data['target_masks'].unsqueeze(1)[0])
-                tb_logger.summ_image('pred/rgb', rgb.permute(0, 3, 1, 2)[0])
-                tb_logger.summ_image('pred/mask', mask.unsqueeze(1)[0])
+            # if n_iters % cfg.train.log_freq == 0:
+            #     tb_logger.summ_scalar('loss_scaled/loss', loss)
+            #     for loss_name, loss_value in loss_items.items():
+            #         tb_logger.summ_scalar(f'loss_scaled/loss_{loss_name}', loss_value['scaled'])
+            #         tb_logger.summ_scalar(f'loss_unscaled/loss_{loss_name}', loss_value['unscaled'])
+            #
+            #     tb_logger.summ_image('input/rgb', data['target_rgbs'].permute(0, 3, 1, 2)[0])
+            #     tb_logger.summ_image('input/mask', data['target_masks'].unsqueeze(1)[0])
+            #     tb_logger.summ_image('pred/rgb', rgb.permute(0, 3, 1, 2)[0])
+            #     tb_logger.summ_image('pred/mask', mask.unsqueeze(1)[0])
 
             if n_iters % cfg.train.log_freq == 0:
                 loss_str = f"iter {n_iters} - loss: {loss.item():.4f} ("
